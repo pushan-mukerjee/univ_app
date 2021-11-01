@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
    protect_from_forgery with: :exception
 
+   before_action :require_user
+
    #defining helper_method enables all views to use the logged_in functionality
    helper_method :current_user, :logged_in?
 
@@ -14,4 +16,10 @@ class ApplicationController < ActionController::Base
      !!current_user #returns true if current_user exists, esle returns false !! is true/false syntax in Rails.
    end
 
+   def require_user
+     if !logged_in?
+       flash[:notice] = "You must be logged in to perform that action"
+       redirect_to login_path
+     end 
+   end
 end
